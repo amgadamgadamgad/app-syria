@@ -64,8 +64,8 @@
 
         function showCustomerView(email) {  
             const user = users[email];  
-            document.getElementById('viewer-details').innerText = اسم المستخدم: ${user.realName};  
-            document.getElementById('viewer-balance').innerText = الرصيد: ${user.balance} ل.س;  
+            document.getElementById('viewer-details').innerText = `اسم المستخدم: ${user.realName}`;  
+            document.getElementById('viewer-balance').innerText = `الرصيد: ${user.balance} ل.س`;  
             document.getElementById('customer-view').classList.remove('hidden');  
             document.getElementById('admin-view').classList.add('hidden');  
         }  
@@ -76,7 +76,7 @@
             if (users[email]) {  
                 if (!isNaN(newBalance)) {  
                     users[email].balance = newBalance; // حفظ الرصيد الجديد في الكود  
-                    alert(تم تحديث رصيد ${users[email].realName} إلى ${newBalance} ل.س);  
+                    alert(`تم تحديث رصيد ${users[email].realName} إلى ${newBalance} ل.س`);  
                     document.getElementById('new-balance').value = '';  
                 } else {  
                     alert('يرجى إدخال قيمة صحيحة');  
@@ -94,7 +94,7 @@
             if (realName && email && password) {  
                 if (!users[email]) { // التأكد من عدم وجود مستخدم بنفس البريد الإلكتروني  
                     users[email] = { realName: realName, password: password, balance: 0 }; // إضافة المستخدم الجديد  
-                    alert(تم إضافة المستخدم ${realName} بنجاح.);  
+                    alert(`تم إضافة المستخدم ${realName} بنجاح.`);  
                     document.getElementById('new-real-name').value = '';  
                     document.getElementById('new-user-email').value = '';  
                     document.getElementById('new-user-password').value = '';  
@@ -107,4 +107,4 @@
         }  
     </script>  
 </body>  
-</html>
+</html>  
