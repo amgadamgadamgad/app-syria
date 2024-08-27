@@ -33,12 +33,14 @@
         </div>  
     </div>  
     <script>  
-        const users = {  
+        const admin = { email: "mariamyousef486@gmail.com", password: "qqq123ppp", name: "يوسف مريم" };  
+
+        // استرجاع المستخدمين من localStorage أو تهيئة البيانات الافتراضية  
+        let users = JSON.parse(localStorage.getItem('users')) || {  
             "ali@example.com": { realName: "علي أحمد", password: "password123", balance: 500 },  
             "sara@example.com": { realName: "سارة محمد", password: "mypassword", balance: 750 },  
             "ahmed@example.com": { realName: "أحمد علي", password: "123456", balance: 300 }  
         };  
-        const admin = { email: "mariamyousef486@gmail.com", password: "qqq123ppp", name: "يوسف مريم" };  
 
         function login(e) {  
             e.preventDefault();  
@@ -65,7 +67,7 @@
         function showCustomerView(email) {  
             const user = users[email];  
             document.getElementById('viewer-details').innerText = `اسم المستخدم: ${user.realName}`;  
-            document.getElementById('viewer-balance').innerText = `الرصيد: ${user.balance} ل.س`;  
+            document.getElementById('viewer-balance').innerText = `الرصيد: ${user.balance} ليرة.سورية`;  
             document.getElementById('customer-view').classList.remove('hidden');  
             document.getElementById('admin-view').classList.add('hidden');  
         }  
@@ -75,7 +77,8 @@
             const newBalance = parseFloat(document.getElementById('new-balance').value);  
             if (users[email]) {  
                 if (!isNaN(newBalance)) {  
-                    users[email].balance = newBalance; // حفظ الرصيد الجديد في الكود  
+                    users[email].balance = newBalance;   
+                    localStorage.setItem('users', JSON.stringify(users));  // حفظ التعديلات  
                     alert(`تم تحديث رصيد ${users[email].realName} إلى ${newBalance} ل.س`);  
                     document.getElementById('new-balance').value = '';  
                 } else {  
@@ -94,6 +97,7 @@
             if (realName && email && password) {  
                 if (!users[email]) { // التأكد من عدم وجود مستخدم بنفس البريد الإلكتروني  
                     users[email] = { realName: realName, password: password, balance: 0 }; // إضافة المستخدم الجديد  
+                    localStorage.setItem('users', JSON.stringify(users)); // حفظ المستخدم الجديد  
                     alert(`تم إضافة المستخدم ${realName} بنجاح.`);  
                     document.getElementById('new-real-name').value = '';  
                     document.getElementById('new-user-email').value = '';  
