@@ -1,111 +1,110 @@
-<!DOCTYPE html>  
-    <html lang="ar">  
-    <head>  
-        <meta charset="UTF-8">  
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-        <title>إدارة المستخدم</title>  
-        <script src="https://cdn.tailwindcss.com"></script>  
-    </head>  
-    <body class="flex justify-center items-center h-screen bg-gray-100">  
-        <div class="border p-5 rounded shadow w-80">  
-            <h1 class="text-xl mb-4">تسجيل الدخول</h1>  
-            <form onsubmit="login(event)">  
-                <input type="email" id="login-email" required class="border p-2 w-full mb-2" placeholder="البريد الإلكتروني">  
-                <input type="password" id="login-password" required class="border p-2 w-full mb-2" placeholder="كلمة المرور">  
-                <button type="submit" class="bg-blue-500 text-white w-full p-2">تسجيل الدخول</button>  
-            </form>  
-            <div id="user-management" class="hidden mt-4">  
-                <h1 class="text-xl mb-4">إدارة المستخدم</h1>  
-                <form onsubmit="registerUser(event)">  
-                    <input type="text" id="username" required class="border p-2 w-full mb-2" placeholder="اسم المستخدم">  
-                    <input type="email" id="email" required class="border p-2 w-full mb-2" placeholder="البريد الإلكتروني">  
-                    <input type="password" id="password" required class="border p-2 w-full mb-2" placeholder="كلمة المرور">  
-                    <button type="submit" class="bg-blue-500 text-white w-full p-2">تسجيل</button>  
-                </form>  
-                <div id="customer-info" class="hidden mt-4">  
-                    <h2 class="text-lg">معلومات الزبون</h2>  
-                    <p id="customer-details"></p>  
-                    <p id="customer-balance"></p>  
-                    <input type="number" id="new-balance" class="border p-2 w-full mb-2" placeholder="رصيد جديد">  
-                    <button onclick="updateBalance()" class="bg-blue-500 text-white w-full p-2">تحديث الرصيد</button>  
-                </div>  
-            </div>  
-            <div id="customer-view" class="hidden mt-4">  
-                <h2 class="text-lg">معلومات الزبون</h2>  
-                <p id="viewer-details"></p>  
-                <p id="viewer-balance"></p>  
-            </div>  
+<html lang="ar">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>تحديث رصيد الزبائن</title>  
+    <script src="https://cdn.tailwindcss.com"></script>  
+</head>  
+<body class="flex justify-center items-center h-screen bg-gray-100">  
+    <div class="border p-5 rounded shadow w-80">  
+        <h1 class="text-xl mb-4">تسجيل الدخول</h1>  
+        <form onsubmit="login(event)">  
+            <input type="text" id="real-name" required class="border p-2 w-full mb-2" placeholder="الاسم الحقيقي">  
+            <input type="email" id="login-email" required class="border p-2 w-full mb-2" placeholder="البريد الإلكتروني">  
+            <input type="password" id="login-password" required class="border p-2 w-full mb-2" placeholder="كلمة المرور">  
+            <button type="submit" class="bg-blue-500 text-white w-full p-2">تسجيل الدخول</button>  
+        </form>  
+        <div id="customer-view" class="hidden mt-4">  
+            <h2 class="text-lg">معلومات الزبون</h2>  
+            <p id="viewer-details"></p>  
+            <p id="viewer-balance"></p>  
         </div>  
-        <script>  
-            const users = {};  
-            const adminEmail = "mariamyousef486@gmail.com";  
-            const adminPassword = "QQQ123PPP";  
-            let isAdmin = false;  
-            
-            function login(e) {  
-                e.preventDefault();  
-                const email = document.getElementById('login-email').value;  
-                const password = document.getElementById('login-password').value;  
+        <div id="admin-view" class="hidden mt-4">  
+            <h2 class="text-lg">إدارة الأرصدة</h2>  
+            <input type="email" id="admin-email" class="border p-2 w-full mb-2" placeholder="البريد الإلكتروني للزبون">  
+            <input type="number" id="new-balance" class="border p-2 w-full mb-2" placeholder="رصيد جديد">  
+            <button onclick="updateBalance()" class="bg-green-500 text-white w-full p-2">تحديث الرصيد</button>  
 
-                if (email === adminEmail && password === adminPassword) {  
-                    isAdmin = true;  
-                    document.getElementById('user-management').classList.remove('hidden');  
-                } else {  
-                    isAdmin = false;  
-                    alert('تم تسجيل الدخول للعرض فقط');  
-                }  
+            <h2 class="text-lg mt-4">إضافة مستخدم جديد</h2>  
+            <input type="text" id="new-real-name" class="border p-2 w-full mb-2" placeholder="الاسم الحقيقي">  
+            <input type="email" id="new-user-email" class="border p-2 w-full mb-2" placeholder="البريد الإلكتروني">  
+            <input type="password" id="new-user-password" class="border p-2 w-full mb-2" placeholder="كلمة المرور">  
+            <button id="add-user-button" class="bg-blue-500 text-white w-full p-2" onclick="addUser()">إضافة مستخدم</button>  
+        </div>  
+    </div>  
+    <script>  
+        const users = {  
+            "ali@example.com": { realName: "علي أحمد", password: "password123", balance: 500 },  
+            "sara@example.com": { realName: "سارة محمد", password: "mypassword", balance: 750 },  
+            "ahmed@example.com": { realName: "أحمد علي", password: "123456", balance: 300 }  
+        };  
+        const admin = { email: "mariamyousef486@gmail.com", password: "qqq123ppp", name: "يوسف مريم" };  
+
+        function login(e) {  
+            e.preventDefault();  
+            const realName = document.getElementById('real-name').value;  
+            const email = document.getElementById('login-email').value;  
+            const password = document.getElementById('login-password').value;  
+
+            if (email === admin.email && password === admin.password && realName === admin.name) {  
+                alert('تم تسجيل الدخول كمدير.');  
+                showAdminView();  
+            } else if (users[email]?.password === password && users[email].realName === realName) {  
+                alert('تم تسجيل الدخول كزبون.');  
                 showCustomerView(email);  
+            } else {  
+                alert('البريد الإلكتروني أو كلمة المرور أو الاسم الحقيقي غير صحيحة');  
             }  
+        }  
 
-            function registerUser(e) {  
-                e.preventDefault();  
-                const username = document.getElementById('username').value;  
-                const email = document.getElementById('email').value;  
-                const password = document.getElementById('password').value;  
-                
-                users[email] = { username, password, balance: 0 };  
-                showCustomerInfo(email);  
-            }  
+        function showAdminView() {  
+            document.getElementById('admin-view').classList.remove('hidden');  
+            document.getElementById('customer-view').classList.add('hidden');  
+        }  
 
-            function showCustomerInfo(email) {  
-                const user = users[email];  
-                if (user) {  
-                    document.getElementById('customer-details').innerText = اسم المستخدم: ${user.username};  
-                    document.getElementById('customer-balance').innerText = الرصيد: ${user.balance} ل.س;  
-                    document.getElementById('customer-info').classList.remove('hidden');  
-                    document.getElementById('viewer-details').innerText = اسم المستخدم: ${user.username};  
-                    document.getElementById('viewer-balance').innerText = الرصيد: ${user.balance} ل.س;  
-                    document.getElementById('customer-view').classList.remove('hidden');  
-                }  
-            }  
+        function showCustomerView(email) {  
+            const user = users[email];  
+            document.getElementById('viewer-details').innerText = اسم المستخدم: ${user.realName};  
+            document.getElementById('viewer-balance').innerText = الرصيد: ${user.balance} ل.س;  
+            document.getElementById('customer-view').classList.remove('hidden');  
+            document.getElementById('admin-view').classList.add('hidden');  
+        }  
 
-            function showCustomerView(email) {  
-                const user = users[email];  
-                if (user) {  
-                    document.getElementById('viewer-details').innerText = اسم المستخدم: ${user.username};  
-                    document.getElementById('viewer-balance').innerText = الرصيد: ${user.balance} ل.س;  
-                    document.getElementById('customer-view').classList.remove('hidden');  
-                    
-                    if (isAdmin) {  
-                        document.getElementById('customer-info').classList.remove('hidden');  
-                    } else {  
-                        document.getElementById('customer-info').classList.add('hidden');  
-                    }  
-                }  
-            }  
-
-            function updateBalance() {  
-                const email = document.getElementById('email').value;  
-                const newBalance = parseFloat(document.getElementById('new-balance').value);  
-                
-                if (isAdmin && !isNaN(newBalance)) {  
-                    users[email].balance = newBalance;  
-                    document.getElementById('customer-balance').innerText = الرصيد: ${newBalance} ل.س;  
+        function updateBalance() {  
+            const email = document.getElementById('admin-email').value;  
+            const newBalance = parseFloat(document.getElementById('new-balance').value);  
+            if (users[email]) {  
+                if (!isNaN(newBalance)) {  
+                    users[email].balance = newBalance; // حفظ الرصيد الجديد في الكود  
+                    alert(تم تحديث رصيد ${users[email].realName} إلى ${newBalance} ل.س);  
                     document.getElementById('new-balance').value = '';  
                 } else {  
-                    alert('لا يمكنك تعديل الرصيد');  
+                    alert('يرجى إدخال قيمة صحيحة');  
                 }  
+            } else {  
+                alert('البريد الإلكتروني غير موجود');  
             }  
-        </script>  
-    </body>  
-    </html>
+        }  
+
+        function addUser() {  
+            const realName = document.getElementById('new-real-name').value;  
+            const email = document.getElementById('new-user-email').value;  
+            const password = document.getElementById('new-user-password').value;  
+
+            if (realName && email && password) {  
+                if (!users[email]) { // التأكد من عدم وجود مستخدم بنفس البريد الإلكتروني  
+                    users[email] = { realName: realName, password: password, balance: 0 }; // إضافة المستخدم الجديد  
+                    alert(تم إضافة المستخدم ${realName} بنجاح.);  
+                    document.getElementById('new-real-name').value = '';  
+                    document.getElementById('new-user-email').value = '';  
+                    document.getElementById('new-user-password').value = '';  
+                } else {  
+                    alert('يوجد مستخدم بالفعل بنفس البريد الإلكتروني.');  
+                }  
+            } else {  
+                alert('يرجى ملء جميع الحقول.');  
+            }  
+        }  
+    </script>  
+</body>  
+</html>
