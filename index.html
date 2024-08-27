@@ -1,3 +1,4 @@
+
 <html lang="ar">  
 <head>  
     <meta charset="UTF-8">  
@@ -22,8 +23,11 @@
         <div id="admin-view" class="hidden mt-4">  
             <h2 class="text-lg">إدارة الأرصدة</h2>  
             <input type="email" id="admin-email" class="border p-2 w-full mb-2" placeholder="البريد الإلكتروني للزبون">  
-            <input type="number" id="new-balance" class="border p-2 w-full mb-2" placeholder="رصيد جديد">  
-            <button onclick="updateBalance()" class="bg-green-500 text-white w-full p-2">تحديث الرصيد</button>  
+            <p id="previous-balance" class="mb-2"></p>  
+            <input type="number" id="balance-change" class="border p-2 w-full mb-2" placeholder="الرصيد المضاف أو المنقوص">  
+            <button onclick="calculateNewBalance()" class="bg-yellow-500 text-white w-full p-2">حساب الرصيد الجديد</button>  
+            <p id="new-balance-display" class="mt-2"></p>  
+            <button onclick="updateBalance()" class="bg-green-500 text-white w-full p-2 mt-2">تحديث الرصيد</button>  
 
             <h2 class="text-lg mt-4">إضافة مستخدم جديد</h2>  
             <input type="text" id="new-real-name" class="border p-2 w-full mb-2" placeholder="الاسم الحقيقي">  
@@ -67,23 +71,34 @@
         function showCustomerView(email) {  
             const user = users[email];  
             document.getElementById('viewer-details').innerText = `اسم المستخدم: ${user.realName}`;  
-            document.getElementById('viewer-balance').innerText = `الرصيد: ${user.balance} ليرة.سورية`;  
+            document.getElementById('viewer-balance').innerText = `الرصيد: ${user.balance} ل.س`;  
             document.getElementById('customer-view').classList.remove('hidden');  
             document.getElementById('admin-view').classList.add('hidden');  
         }  
 
+        function calculateNewBalance() {  
+            const email = document.getElementById('admin-email').value;  
+            const balanceChange = parseFloat(document.getElementById('balance-change').value);  
+            if (users[email]) {  
+                const previousBalance = users[email].balance;  
+                const newBalance = previousBalance + balanceChange;  
+                document.getElementById('previous-balance').innerText = `الرصيد السابق: ${previousBalance} ل.س`;  
+                document.getElementById('new-balance-display').innerText = `الرصيد الجديد: ${newBalance} ل.س`;  
+            } else {  
+                alert('البريد الإلكتروني غير موجود');  
+            }  
+        }  
+
         function updateBalance() {  
             const email = document.getElementById('admin-email').value;  
-            const newBalance = parseFloat(document.getElementById('new-balance').value);  
+            const balanceChange = parseFloat(document.getElementById('balance-change').value);  
             if (users[email]) {  
-                if (!isNaN(newBalance)) {  
-                    users[email].balance = newBalance;   
-                    localStorage.setItem('users', JSON.stringify(users));  // حفظ التعديلات  
-                    alert(`تم تحديث رصيد ${users[email].realName} إلى ${newBalance} ل.س`);  
-                    document.getElementById('new-balance').value = '';  
-                } else {  
-                    alert('يرجى إدخال قيمة صحيحة');  
-                }  
+                users[email].balance += balanceChange;   
+                localStorage.setItem('users', JSON.stringify(users));  // حفظ التعديلات  
+                alert(`تم تحديث رصيد ${users[email].realName} إلى ${users[email].balance} ل.س`);  
+                document.getElementById('balance-change').value = '';  
+                document.getElementById('previous-balance').innerText = '';  
+                document.getElementById('new-balance-display').innerText = '';  
             } else {  
                 alert('البريد الإلكتروني غير موجود');  
             }  
@@ -111,4 +126,4 @@
         }  
     </script>  
 </body>  
-</html>  
+</html>
