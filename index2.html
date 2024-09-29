@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة شراء الأرقام</title>
+    <style>
+        .numbers-list {
+            display: none;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>أدخل البريد الإلكتروني وعدد الأرقام لعرضها</h2>
+    
+    <!-- حقل إدخال البريد الإلكتروني -->
+    <input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني">
+    
+    <!-- حقل إدخال عدد الأرقام -->
+    <input type="number" id="countInput" placeholder="أدخل عدد الأرقام" min="1">
+    
+    <button onclick="checkEmailAndCount()">تحقق</button>
+
+    <p id="message"></p>
+
+    <div class="numbers-list" id="numbersList">
+        <h3>الأرقام المتاحة:</h3>
+        <ul id="numbersUl">
+            <!-- الأرقام ستضاف هنا -->
+        </ul>
+    </div>
+
+    <script>
+        function checkEmailAndCount() {
+            const emailInput = document.getElementById("emailInput").value;
+            const countInput = document.getElementById("countInput").value; // عدد الأرقام
+            const correctEmail = "example@example.com"; // البريد الإلكتروني الصحيح الذي سيتم التحقق منه
+            const message = document.getElementById("message");
+            const numbersList = document.getElementById("numbersList");
+            const numbersUl = document.getElementById("numbersUl");
+
+            // الأرقام المتاحة (قائمة الأرقام التي وضعتها في الكود)
+            const numbers = [
+                "1234567890", "0987654321", "1112223334", "2223334445", "3334445556",
+                "4445556667", "5556667778", "6667778889", "7778889990", "8889990001",
+                // ... أضف المزيد من الأرقام هنا حتى تصل إلى 100
+            ];
+
+            if (emailInput === correctEmail) {
+                message.textContent = "تم التحقق بنجاح!";
+                message.className = "success";
+
+                // التأكد من أن المستخدم طلب عدد أرقام صالح
+                if (countInput > 0 && countInput <= numbers.length) {
+                    numbersList.style.display = "block";
+                    numbersUl.innerHTML = ""; // مسح القائمة السابقة
+
+                    // إضافة العدد المحدد من الأرقام
+                    for (let i = 0; i < countInput; i++) {
+                        const li = document.createElement("li");
+                        li.textContent = numbers[i];
+                        numbersUl.appendChild(li);
+                    }
+                } else {
+                    message.textContent = يرجى إدخال عدد بين 1 و ${numbers.length}.;
+                    message.className = "error";
+                    numbersList.style.display = "none";
+                }
+            } else {
+                message.textContent = "البريد الإلكتروني غير صحيح.";
+                message.className = "error";
+                numbersList.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
